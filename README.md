@@ -1,6 +1,12 @@
-# control-versiones-tp2
-taller practico de introduccion en sofware 2, sobre el control de versiones, git y github. 
-participantes:  
--Castro Pacalla 
--Chavez Edison
--Daddy Ficher)
+# Control de Versiones con Git y GitHub - UNEMI
+
+Repositorio del Examen Práctico 2 de la carrera de Ingeniería en Software (UNEMI).
+
+## Descripción
+Proyecto de práctica para aplicar los conceptos básicos de control de versiones:
+repositorios, commits, historial de cambios y trabajo colaborativo con GitHub.
+
+## Integrantes
+- Castro Pacalla Josthin
+- Chávez Fernández Edison
+- Ficher Martínez Daddy
