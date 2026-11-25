@@ -1,15 +1,165 @@
- Control de Versiones con Git y GitHub
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Equipo - Control de Versiones con Git y GitHub</title>
+<style>
+:root{--ink:#1B3247;--c:#7B61C9;--soft:color-mix(in srgb,var(--c) 14%,#fff);--ease:cubic-bezier(.65,0,.25,1)}
+*{box-sizing:border-box;margin:0}
+body{font-family:"Segoe UI",system-ui,sans-serif;color:var(--ink);background:var(--soft);min-height:100vh;overflow-x:hidden;transition:background-color .7s var(--ease);line-height:1.55}
+h1,h2,h3{font-family:Georgia,"Palatino Linotype",serif;line-height:1.15}
+.blob{position:fixed;z-index:0;background:var(--c);opacity:.16;transition:background-color .7s,transform .9s var(--ease),border-radius .9s var(--ease);pointer-events:none}
+.b1{width:46vmax;height:46vmax;top:-18vmax;right:-14vmax;border-radius:50%}
+.b2{width:30vmax;height:30vmax;bottom:-12vmax;left:-10vmax;border-radius:50%}
+body[data-p="0"] .b1{transform:translate(0,0)}
+body[data-p="1"] .b1{transform:translate(-18vmax,12vmax) rotate(45deg);border-radius:18%}
+body[data-p="2"] .b1{transform:translate(-4vmax,26vmax) rotate(90deg);border-radius:30% 70% 60% 40%}
+body[data-p="1"] .b2{transform:translate(30vmax,-10vmax);border-radius:20%}
+body[data-p="2"] .b2{transform:translate(55vmax,-24vmax);border-radius:60% 40% 30% 70%}
+main{position:relative;z-index:1;max-width:1000px;margin:0 auto;padding:40px 20px 70px}
+header h1{font-size:clamp(1.9rem,5vw,3rem);max-width:16ch}
+header p{max-width:52ch;margin-top:10px;opacity:.8}
+nav{display:flex;gap:14px;flex-wrap:wrap;margin:32px 0 26px}
+.tab{display:flex;align-items:center;gap:12px;border:2px solid transparent;background:#fff;border-radius:999px;padding:8px 20px 8px 8px;font:inherit;font-weight:600;color:var(--ink);cursor:pointer;box-shadow:0 2px 10px rgba(27,50,71,.08);transition:transform .25s,border-color .3s,background-color .3s}
+.tab:hover{transform:translateY(-2px)}
+.tab[aria-selected=true]{border-color:var(--c);background:var(--c);color:#fff}
+.tab:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
+.shape{display:grid;place-items:center;color:#fff;font-family:Georgia,serif;font-weight:700;background:var(--pc);flex:none}
+.tab .shape{width:38px;height:38px;font-size:1.05rem}
+.circle{border-radius:50%}.square{border-radius:24%}.hex{clip-path:polygon(25% 5%,75% 5%,100% 50%,75% 95%,25% 95%,0 50%)}
+.tab[aria-selected=true] .shape{background:#fff;color:var(--pc)}
+.view{overflow:hidden;border-radius:28px}
+.track{display:flex;width:300%;transition:transform .75s var(--ease)}
+.panel{width:33.3333%;padding:34px;background:#fff;opacity:.35;transition:opacity .6s}
+.panel.active{opacity:1}
+.top{display:flex;gap:26px;align-items:center;flex-wrap:wrap}
+.top .shape{width:118px;height:118px;font-size:3rem;transition:transform .9s var(--ease)}
+.panel:not(.active) .top .shape{transform:scale(.6) rotate(-25deg)}
+.top h2{font-size:clamp(1.4rem,3.4vw,2rem)}
+.top p{color:var(--pc);font-weight:700}
+.done{display:grid;gap:14px;margin:28px 0}
+.item{padding:16px 18px;border-radius:16px;background:color-mix(in srgb,var(--pc) 10%,#fff)}
+.item h3{font-size:1.05rem;color:var(--pc);margin-bottom:4px}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chips code{background:var(--ink);color:#fff;border-radius:8px;padding:4px 10px;font-size:.88rem}
+.note{margin-top:22px;padding:14px 18px;border:2px dashed var(--pc);border-radius:16px}
+.photos{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-top:22px}
+.ph{position:relative;aspect-ratio:4/3;border-radius:16px;border:2px dashed #b9c4cf;display:grid;place-items:center;text-align:center;font-size:.85rem;color:#6b7d8f;overflow:hidden}
+.ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.ph small{display:block;font-family:Consolas,monospace}
+.shots{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin-top:22px;align-items:start}
+.shot img,.ba img{display:block;width:100%;height:auto;border-radius:12px;border:1px solid #d6dee6}
+.shot figcaption{font-size:.88rem;margin-top:6px;opacity:.8}
+.ba{display:grid;grid-template-columns:1fr auto 1fr;gap:16px;align-items:center;margin-top:16px}
+.ba figure{background:#fff;border-radius:20px;padding:12px}
+.ba figcaption{padding:10px 4px 2px}.ba b{display:block;color:var(--c);transition:color .7s}
+.arrow{font-size:2.2rem;color:var(--c);transition:color .7s}
+@media(max-width:700px){.ba{grid-template-columns:1fr}.arrow{transform:rotate(90deg);justify-self:center}}
+.sec{margin-top:54px}
+.sec h2{font-size:1.6rem;margin-bottom:16px}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;list-style:none;padding:0}
+.steps li{background:#fff;border-radius:16px;padding:16px}
+.steps b{display:block;color:var(--c);transition:color .7s}
+.link{display:inline-block;background:var(--ink);color:#fff;text-decoration:none;font-weight:600;padding:12px 22px;border-radius:999px;margin:0 10px 10px 0;transition:transform .25s,background-color .7s}
+.link:hover{transform:translateY(-2px);background:var(--c)}
+.link:focus-visible{outline:3px solid var(--c);outline-offset:3px}
+.item,.note{opacity:0;transform:translateX(40px)}
+.panel.active .item,.panel.active .note{animation:in .7s var(--ease) forwards}
+.panel.active .item:nth-child(2){animation-delay:.12s}.panel.active .item:nth-child(3){animation-delay:.24s}
+.panel.active .note{animation-delay:.36s}
+@keyframes in{to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{transition-duration:.01ms!important;animation-duration:.01ms!important;animation-delay:0s!important}}
+@media(max-width:600px){.panel{padding:22px}.top .shape{width:84px;height:84px;font-size:2.2rem}}
+</style>
+</head>
+<body data-p="0">
+<div class="blob b1"></div><div class="blob b2"></div>
+<main>
+<header>
+  <h1>Control de versiones con Git y GitHub</h1>
+  <p>Examen Práctico 2 de Ingeniería en Software, UNEMI. Elige a un integrante para ver qué hizo en el proyecto.</p>
+</header>
+<nav id="tabs" role="tablist" aria-label="Integrantes del equipo"></nav>
+<div class="view"><div class="track" id="track"></div></div>
 
-Repositorio del Examen Práctico 2 de la carrera de Ingeniería en Software (UNEMI).
+<section class="sec">
+  <h2>Cómo trabajamos</h2>
+  <ol class="steps">
+    <li><b>Crear</b>El repositorio público y su README.md.</li>
+    <li><b>Clonar</b>Cada integrante lleva el proyecto a su computadora.</li>
+    <li><b>Commit</b>Cambios pequeños con mensajes que explican qué se hizo.</li>
+    <li><b>Publicar</b>git push para compartir el trabajo en GitHub.</li>
+  </ol>
+</section>
 
-## Descripción
-Proyecto de práctica para aplicar los conceptos básicos de control de versiones:
-repositorios, commits, historial de cambios y trabajo colaborativo con GitHub.
+<section class="sec">
+  <h2>Evidencias del equipo: del inicio al final</h2>
+  <p>La primera versión de la página y cómo quedó después de los cambios de cada integrante.</p>
+  <div class="ba">
+    <figure><a href="img/inicio.png" target="_blank" rel="noopener"><img src="img/inicio.png" alt="Primera versión de la página, con texto simple"></a><figcaption><b>Al inicio</b>Una página simple, sin colores ni secciones por integrante.</figcaption></figure>
+    <div class="arrow" aria-hidden="true">&#10140;</div>
+    <figure><a href="img/final.png" target="_blank" rel="noopener"><img src="img/final.png" alt="Versión final con una pestaña por integrante"></a><figcaption><b>Al final</b>Una pestaña por integrante, con colores propios y animación al cambiar.</figcaption></figure>
+  </div>
+</section>
 
-## Integrantes
-- Castro Pacalla Josthin
-- Edison Fernandez Bladimir
-- Daddy Fischer Martinez
+<section class="sec">
+  <h2>Enlaces</h2>
+  <a class="link" href="https://github.com/castropcjos/control-versiones-tp2" target="_blank" rel="noopener">Ver el repositorio en GitHub</a>
+  <!-- Agrega aquí el enlace de la presentación: <a class="link" href="URL">Ver la presentación</a> -->
+</section>
+</main>
 
-<h2>Objetivo</h2>
-  <p>Aplicar Git y GitHub para gestionar cambios y trabajar en equipo.</p>
+<script>
+/* Edita aquí los nombres, colores y textos de cada integrante. */
+const DATA=[
+ {n:"Ficher Martínez Daddy",s:"Daddy",shape:"hex",color:"#7B61C9",role:"Slides 1, 2 y 3: conceptos y comandos",
+  done:[["Control de versiones","Explicó qué es, por qué importa y un ejemplo de su utilidad."],
+        ["Git y GitHub","Diferenció la herramienta local (Git) de la plataforma en la nube (GitHub)."],
+        ["Comandos básicos","Presentó init, add, commit, status, log y push con un ejemplo sencillo."]],
+  cmds:["git init","git add","git commit","git push"],
+  imgs:[["img/daddy-1.png","Presentación, slide 1: qué es el control de versiones"],["img/daddy-2.png","Presentación, slide 2: Git y GitHub"]],
+  extra:"Introduccion al tema del trabajo, diferenciacion entre git y github posteriormente el listado de comando basicos a usar en el git para este trabajo."},
+ {n:"Chávez Fernández Edison",s:"Edison",shape:"square",color:"#3E7CB1",role:"Slides 4 y 5: trabajo colaborativo y repositorio",
+  done:[["Trabajo colaborativo","Explicó qué es un repositorio, qué es un commit y cómo GitHub ayuda al equipo."],
+        ["Creación del repositorio","Creó el repositorio público con su README.md y la descripción del proyecto."],
+        ["Commits del equipo","Agregó su nombre y la sección de objetivo en index.html."]],
+  cmds:["git add","git commit","git pull"],
+  imgs:[["img/edison-1.png","En GitHub: menú + y New repository"],["img/edison-2.png","Formulario del repositorio: nombre, público y README"]],
+  extra:"Se encargo de la creacion del repositorio y posteriormente explicar sus pasos parael resto del equipo y clase."},
+ {n:"Castro Pacalla Josthin",s:"Josthin",shape:"circle",color:"#2A9D8F",role:"Slides 6, 7 y 8: archivos, historial y publicación",
+  done:[["Crear y modificar archivos","Clonó el repositorio y creó index.html con la información del equipo."],
+        ["Registro de cambios","Hizo commits con mensajes descriptivos y mostró el historial con git log."],
+        ["Publicación y colaboración","Subió los cambios con git push y explicó cómo GitHub comparte el trabajo."]],
+  cmds:["git clone","git status","git log --oneline","git push"],
+  imgs:[["img/josthin-1.png","Commit desde la terminal: se guardan los cambios"],["img/josthin-2.png","Clonar el repositorio con git clone"]],
+  extra:"Se llevo a cabo el apartado del idex y se aprendizo el uso debido de los comandos iniciales de git y github"}
+];
+const tabs=document.getElementById("tabs"),track=document.getElementById("track"),body=document.body;
+DATA.forEach((d,i)=>{
+  const id=d.s.toLowerCase();
+  tabs.insertAdjacentHTML("beforeend",`<button class="tab" role="tab" id="tab${i}" aria-controls="p${i}" style="--pc:${d.color}"><span class="shape ${d.shape}">${d.s[0]}</span>${d.s}</button>`);
+  track.insertAdjacentHTML("beforeend",`<article class="panel" id="p${i}" role="tabpanel" aria-labelledby="tab${i}" style="--pc:${d.color}">
+   <div class="top"><div class="shape ${d.shape}">${d.s[0]}</div><div><h2>${d.n}</h2><p>${d.role}</p></div></div>
+   <div class="done">${d.done.map(x=>`<div class="item"><h3>${x[0]}</h3><p>${x[1]}</p></div>`).join("")}</div>
+   <div class="chips">${d.cmds.map(c=>`<code>${c}</code>`).join("")}</div>
+   <div class="note">${d.extra}</div>
+   <div class="shots">${d.imgs.map(x=>`<figure class="shot"><a href="${x[0]}" target="_blank" rel="noopener"><img src="${x[0]}" alt="${x[1]}"></a><figcaption>${x[1]}</figcaption></figure>`).join("")}</div></article>`);
+});
+const btns=[...tabs.children],panels=[...track.children];
+function go(i){
+  body.dataset.p=i;
+  document.documentElement.style.setProperty("--c",DATA[i].color);
+  track.style.transform=`translateX(${-i*100/3}%)`;
+  btns.forEach((b,k)=>{b.setAttribute("aria-selected",k===i);b.tabIndex=k===i?0:-1});
+  panels.forEach((p,k)=>{p.classList.toggle("active",k===i);p.inert=k!==i});
+}
+btns.forEach((b,i)=>b.addEventListener("click",()=>go(i)));
+tabs.addEventListener("keydown",e=>{
+  const cur=btns.findIndex(b=>b.getAttribute("aria-selected")==="true");
+  if(e.key==="ArrowRight"||e.key==="ArrowLeft"){const n=(cur+(e.key==="ArrowRight"?1:2))%3;go(n);btns[n].focus()}
+});
+go(0);
+</script>
+</body>
+</html>
