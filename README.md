@@ -9,4 +9,4 @@ repositorios, commits, historial de cambios y trabajo colaborativo con GitHub.
 ## Integrantes
 - Castro Pacalla Josthin
 - Chávez Fernández Edison
-- Ficher Martínez Daddy
+- Fischer Martínez Daddy
